@@ -1,5 +1,8 @@
 package academy
 
+import "math"
+
+
 type Student struct {
 	Name       string
 	Grades     []int
@@ -11,7 +14,22 @@ type Student struct {
 // slice containing all grades received during a
 // semester, rounded to the nearest integer.
 func AverageGrade(grades []int) int {
-	panic("not implemented")
+	n := len(grades);
+	if(n == 0){
+		return 0;
+	}
+
+	var sum float64;
+	for i := 0; i < len(grades); i++{
+		sum += float64(grades[i]);
+	}
+
+	// return int(math.Round(sum/float64(len(grades))));
+	
+	average := sum/float64(n);
+	average = math.Round(average);
+
+	return int(average);
 }
 
 // AttendancePercentage returns a percentage of class
