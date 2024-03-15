@@ -2,7 +2,6 @@ package academy
 
 import "math"
 
-
 type Student struct {
 	Name       string
 	Grades     []int
@@ -14,22 +13,22 @@ type Student struct {
 // slice containing all grades received during a
 // semester, rounded to the nearest integer.
 func AverageGrade(grades []int) int {
-	n := len(grades);
-	if(n == 0){
-		return 0;
+	n := len(grades)
+	if n == 0 {
+		return 0
 	}
 
-	var sum float64;
-	for i := 0; i < len(grades); i++{
-		sum += float64(grades[i]);
+	var sum int
+	for i := 0; i < n; i++ {
+		sum += grades[i]
 	}
 
 	// return int(math.Round(sum/float64(len(grades))));
-	
-	average := sum/float64(n);
-	average = math.Round(average);
 
-	return int(average);
+	average := float64(sum) / float64(n)
+	average = math.Round(average)
+
+	return int(average)
 }
 
 // AttendancePercentage returns a percentage of class
@@ -39,7 +38,16 @@ func AverageGrade(grades []int) int {
 // The percentage of attendance is represented as a
 // floating-point number ranging from 0 to 1.
 func AttendancePercentage(attendance []bool) float64 {
-	panic("not implemented")
+	n := len(attendance)
+
+	var sum float64
+	for i := 0; i < n; i++ {
+		if attendance[i] {
+			sum++
+		}
+	}
+
+	return sum / float64(n)
 }
 
 // FinalGrade returns a final grade achieved by a student,
@@ -54,12 +62,27 @@ func AttendancePercentage(attendance []bool) float64 {
 // decreased by 1. If the student's attendance is below 60%, average
 // grade is 1 or project grade is 1, the final grade is 1.
 func FinalGrade(s Student) int {
-	panic("not implemented")
+	if AttendancePercentage(s.Attendance) < 0.6 || s.Project == 1 || AverageGrade(s.Grades) == 1 {
+		return 1
+	}
+
+	fg := float64(s.Project+AverageGrade(s.Grades)) / 2
+	fg = math.Round(fg)
+
+	if AttendancePercentage(s.Attendance) < 0.8 && fg > 1 {
+		return int(fg - 1)
+	}
+	return int(fg)
+
 }
 
 // GradeStudents returns a map of final grades for a given slice of
 // Student structs. The key is a student's name and the value is a
 // final grade.
 func GradeStudents(students []Student) map[string]uint8 {
-	panic("not implemented")
+	gradedStudents := map[string]uint8{}
+	for i := 0; i < len(students); i++ {
+		gradedStudents[students[i].Name] = uint8(FinalGrade(students[i]))
+	}
+	return gradedStudents
 }
